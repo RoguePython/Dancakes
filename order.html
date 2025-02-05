@@ -7,8 +7,8 @@
     <title>Order - Dancakes Coffee & Bakery</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places&callback=initAutocomplete" async defer></script>
+    <script src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js"></script>
     <style>
-        /* Custom Colors */
         :root {
             --primary-bg: #5f4630;
             --secondary-bg: #e6e1db;
@@ -56,7 +56,6 @@
 </head>
 <body class="bg-secondary">
 
-    <!-- Header -->
     <header class="text-white py-4">
         <div class="container mx-auto flex justify-between items-center">
             <h1 class="text-xl font-bold">Dancakes Coffee & Bakery</h1>
@@ -66,16 +65,13 @@
         </div>
     </header>
 
-    <!-- Main Content -->
     <main class="py-10">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
 
             <h2 class="text-2xl font-semibold mb-6 text-center text-primary">Order Your Delights</h2>
 
-            <!-- Order Form -->
             <form action="#" method="POST" class="bg-white p-6 rounded-lg shadow-lg space-y-6">
 
-                <!-- Delivery Details -->
                 <section class="space-y-4">
                     <h3 class="text-xl font-medium text-primary">Delivery Details</h3>
 
@@ -102,20 +98,20 @@
                     </div>
                 </section>
 
-                <!-- Delivery Instructions -->
                 <section>
-                    <h3 class="text-xl font-medium text-primary">Delivery Instructions</h3>
-                    <textarea id="instructions" name="instructions" rows="4" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" placeholder="Enter any special delivery instructions..."></textarea>
-                </section>
+                    <h3 class="text-xl font-medium text-primary">Order Details</h3>
+                    <label for="quantity" class="block text-sm font-medium text-gray-700">
+                        Mini Milk Tarts (R19 each OR R17 each for orders of 10 and more)
+                    </label>
+                    <input type="number" id="quantity" name="quantity" min="1" value="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
+                    <p class="mt-2 text-gray-700">Total Price: <span id="total-price">R19</span></p>
+                </section>               
 
-                <!-- Yoco Payment Integration Placeholder -->
                 <section>
                     <h3 class="text-xl font-medium text-primary">Payment</h3>
                     <p class="text-gray-600">Use the button below to pay via Yoco.</p>
 
-                    <!-- Yoco Payment Button (this is a placeholder for now) -->
                     <div id="yoco-payment-button" class="mt-4">
-                        <!-- The button is now for both pay and submit -->
                         <button type="submit" class="w-full py-3 btn-primary rounded-md hover:bg-highlight transition">
                             Pay and Place Order
                         </button>
@@ -127,7 +123,6 @@
         </div>
     </main>
 
-    <!-- Footer -->
     <footer class="text-white py-4">
         <div class="container mx-auto text-center">
             <p>Dancakes Coffee & Bakery</p>
@@ -135,45 +130,24 @@
     </footer>
 
     <script>
-        function initAutocomplete() {
-            const input = document.getElementById('address');
-            const autocomplete = new google.maps.places.Autocomplete(input, {
-                types: ['geocode'],
-                componentRestrictions: { country: 'za' },
-            });
+        document.addEventListener("DOMContentLoaded", function () {
+            const quantityInput = document.getElementById("quantity");
+            const totalPriceElement = document.getElementById("total-price");
 
-            autocomplete.addListener('place_changed', function() {
-                const place = autocomplete.getPlace();
-                if (!place.geometry) {
-                    console.log("No details available for the input address");
-                    return;
+            quantityInput.addEventListener("input", function () {
+                const quantity = parseInt(quantityInput.value) || 1;
+                let pricePerItem = 19;
+
+                // Apply discount if more than 10 mini milk tarts are ordered
+                if (quantity > 9) {
+                    pricePerItem = 17;
                 }
-                console.log("Address details:", place);
-            });
-        }
 
-        // Handle form submission
-        document.querySelector("form").addEventListener("submit", function(event) {
-            event.preventDefault();
-            // Call the payment API (like Yoco) here before finalizing the order
-            processPayment().then(() => {
-                // Once payment is successful, submit the form
-                this.submit();  // Submit the form after payment
-            }).catch((error) => {
-                console.error("Payment failed:", error);
-                alert("There was an error processing your payment. Please try again.");
+                const totalPrice = quantity * pricePerItem;
+                totalPriceElement.textContent = "R" + totalPrice;
             });
         });
-
-        function processPayment() {
-            return new Promise((resolve, reject) => {
-                // Simulate payment process
-                setTimeout(() => {
-                    console.log("Payment processed successfully");
-                    resolve();
-                }, 2000);  // Simulated delay for payment
-            });
-        }
     </script>
+    
 </body>
 </html>
