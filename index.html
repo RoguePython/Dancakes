@@ -94,13 +94,13 @@
                 <button id="menu-btn" class="text-lg font-bold bg-white text-primary px-4 py-2 rounded shadow-md">
                     ☰ Menu
                 </button>
-                <div id="mobile-menu" class="hidden absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg overflow-hidden">
+                <div id="mobile-menu" class="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg overflow-hidden hidden transition-all duration-300">
                     <a href="#hero" class="block px-4 py-2 text-primary hover:bg-gray-200">Home</a>
                     <a href="#about" class="block px-4 py-2 text-primary hover:bg-gray-200">About</a>
                     <a href="#products" class="block px-4 py-2 text-primary hover:bg-gray-200">Milk Tart</a>
                     <a href="#contact" class="block px-4 py-2 text-primary hover:bg-gray-200">Contact</a>
                 </div>
-            </div>           
+            </div>
         </div>
     </header>
 
@@ -152,24 +152,30 @@
     <footer class="bg-primary text-white text-center py-6">
         <p>Dancakes Coffee and Bakery. Celebrating National Milk Tart Day.</p>
     </footer>
-</body>
-
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const menuBtn = document.getElementById("menu-btn");
             const mobileMenu = document.getElementById("mobile-menu");
     
             menuBtn.addEventListener("click", function () {
-                mobileMenu.classList.toggle("hidden");
+                if (mobileMenu.classList.contains("hidden")) {
+                    mobileMenu.classList.remove("hidden");
+                    mobileMenu.classList.add("block");
+                } else {
+                    mobileMenu.classList.remove("block");
+                    mobileMenu.classList.add("hidden");
+                }
             });
     
-            // Close menu when clicking outside
+            // Close the menu when clicking outside of it
             document.addEventListener("click", function (event) {
                 if (!menuBtn.contains(event.target) && !mobileMenu.contains(event.target)) {
+                    mobileMenu.classList.remove("block");
                     mobileMenu.classList.add("hidden");
                 }
             });
         });
     </script>
-    
+</body>
+
 </html>
