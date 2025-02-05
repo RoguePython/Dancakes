@@ -11,8 +11,26 @@
         }
         body {
             background: linear-gradient(to bottom, #e6e1db, #c8a989);
-            color: #5f4630; /* Warm brown text */
+            color: #5f4630;
+            font-size: 1.2rem; /* Increase base font size */
         }
+
+        h1 {
+            font-size: 2.5rem; /* Larger main headings */
+        }
+
+        h2 {
+            font-size: 2rem; /* Larger section headings */
+        }
+
+        h3 {
+            font-size: 1.7rem; /* Larger sub-section headings */
+        }
+
+        p, label, a {
+            font-size: 1.3rem; /* Increase paragraph, links, and form labels */
+        }
+
         .primary-color {
             color: #5f4630; /* Deep brown */
         }
@@ -61,32 +79,44 @@
         <div class="max-w-6xl mx-auto flex justify-between items-center px-6">
             <div class="flex items-center space-x-3">
                 <img src="logo.png" alt="Dancakes Coffee and Bakery Logo" class="h-12">
-                <h1 class="text-2xl font-bold">Dancakes</h1>
+                <h1 class="text-4xl font-bold">Dancakes</h1>
             </div>            
-            <nav>
-                <ul class="flex space-x-6">
-                    <li><a href="#hero" class="hover:text-gray-300">Home</a></li>
-                    <li><a href="#about" class="hover:text-gray-300">About</a></li>
-                    <li><a href="#products" class="hover:text-gray-300">Milk Tart</a></li>
-                    <li><a href="#contact" class="hover:text-gray-300">Contact</a></li>
-                </ul>
+            <!-- Desktop Navigation (Hidden on Small Screens) -->
+            <nav class="hidden md:flex space-x-6">
+                <a href="#hero" class="hover:text-gray-300">Home</a>
+                <a href="#about" class="hover:text-gray-300">About</a>
+                <a href="#products" class="hover:text-gray-300">Milk Tart</a>
+                <a href="#contact" class="hover:text-gray-300">Contact</a>
             </nav>
+
+            <!-- Mobile Dropdown Menu -->
+            <div class="md:hidden relative">
+                <button id="menu-btn" class="text-lg font-bold bg-white text-primary px-4 py-2 rounded shadow-md">
+                    ☰ Menu
+                </button>
+                <div id="mobile-menu" class="hidden absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg overflow-hidden">
+                    <a href="#hero" class="block px-4 py-2 text-primary hover:bg-gray-200">Home</a>
+                    <a href="#about" class="block px-4 py-2 text-primary hover:bg-gray-200">About</a>
+                    <a href="#products" class="block px-4 py-2 text-primary hover:bg-gray-200">Milk Tart</a>
+                    <a href="#contact" class="block px-4 py-2 text-primary hover:bg-gray-200">Contact</a>
+                </div>
+            </div>           
         </div>
     </header>
 
     <!-- Hero Section -->
     <section id="hero" class="relative h-screen bg-cover bg-center fade-in" style="background-image: url('mini-milktarts.jpg'); background-size: cover; background-position: center;">
         <div class="absolute inset-0 flex flex-col justify-center items-center text-white text-center">
-            <h1 class="text-6xl font-extrabold text-shadow">National Milktart Day</h1>
-            <p class="mt-4 text-xl text-shadow">Celebrate National Milk Tart Day with Us!</p>
-            <a href="order.html" class="mt-6 px-8 py-4 text-2xl font-bold rounded-xl btn-highlight shadow-lg transform transition hover:scale-110 animate-grow">Order Now</a>
+            <h1 class="text-7xl font-extrabold text-shadow">National Milktart Day</h1>
+            <p class="mt-4 text-2xl text-shadow">Celebrate National Milk Tart Day with Us!</p>
+            <a href="order.html" class="mt-6 px-10 py-5 text-3xl font-bold rounded-xl btn-highlight shadow-lg transform transition hover:scale-110 animate-grow">Order Now</a>            
         </div>
     </section>
     
         <!-- Product Preview -->
         <section id="products" class="bg-accent py-16 px-6 text-center fade-in">
             <hr class="border-t-2 border-gray-300 w-1/4 mx-auto my-10">
-            <h2 class="text-4xl font-semibold primary-color">Mini Milk Tarts</h2>
+            <h2 class="text-5xl font-semibold primary-color">Mini Milk Tarts</h2>
             <div class="bg-gradient-to-b from-white to-gray-100 p-8 rounded-2xl shadow-2xl max-w-md mx-auto border border-gray-200">
                 <h3 class="text-2xl font-bold text-yellow-700">Delicious <span class="text-brown-600">Mini Milk Tarts</span></h3>
                 <p class="mt-2 text-gray-700">Bite-sized treats perfect for sharing and celebrating National Milk Tart Day.</p>
@@ -98,7 +128,7 @@
     <section id="about" class="py-16 px-6 text-center bg-gray-100 fade-in">
         <hr class="border-t-2 border-gray-300 w-1/4 mx-auto my-10">
         <h2 class="text-5xl font-extrabold text-primary tracking-wide drop-shadow-md">Our Story</h2>
-        <p class="mt-4 text-lg text-gray-700 max-w-3xl mx-auto">
+        <p class="mt-4 text-xl text-gray-700 max-w-3xl mx-auto">
             Dancakes Coffee and Bakery is excited to bring you the finest homemade Milk Tarts, crafted with love and tradition. This National Milk Tart Day, enjoy our rich and creamy Mini Milk Tarts, freshly baked just for you.
         </p>
     </section>
@@ -108,19 +138,38 @@
         <hr class="border-t-2 border-gray-300 w-1/4 mx-auto my-10">
         <h2 class="text-4xl font-semibold primary-color">Get in Touch</h2>
         <div class="bg-white shadow-lg rounded-xl p-6 max-w-lg mx-auto text-gray-800 border border-gray-200">
-            <p class="flex items-center justify-center space-x-3 text-xl">
+            <p class="flex items-center justify-center space-x-3 text-2xl">
                 <span>📍</span> <span>18 Brompton Rd, Navalsig, Bloemfontein, 9301</span>
             </p>
             <p class="mt-3 flex items-center justify-center space-x-3 text-xl">
                 <span>📞</span> <span>Call: Danie Jacobs (+27 61 497 3716)</span>
             </p>
-            <a href="https://www.instagram.com/dancakesbloemfontein/" class="mt-6 inline-block px-8 py-4 text-xl font-bold rounded-xl btn-highlight shadow-lg transform transition hover:scale-105">Find Us</a>
+            <a href="https://www.instagram.com/dancakesbloemfontein/" class="mt-6 inline-block px-10 py-5 text-2xl font-bold rounded-xl btn-highlight shadow-lg transform transition hover:scale-105">Find Us</a>
         </div>
     </section>
-
+    
     <!-- Footer -->
     <footer class="bg-primary text-white text-center py-6">
         <p>Dancakes Coffee and Bakery. Celebrating National Milk Tart Day.</p>
     </footer>
 </body>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const menuBtn = document.getElementById("menu-btn");
+            const mobileMenu = document.getElementById("mobile-menu");
+    
+            menuBtn.addEventListener("click", function () {
+                mobileMenu.classList.toggle("hidden");
+            });
+    
+            // Close menu when clicking outside
+            document.addEventListener("click", function (event) {
+                if (!menuBtn.contains(event.target) && !mobileMenu.contains(event.target)) {
+                    mobileMenu.classList.add("hidden");
+                }
+            });
+        });
+    </script>
+    
 </html>
