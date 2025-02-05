@@ -81,26 +81,14 @@
                 <img src="logo.png" alt="Dancakes Coffee and Bakery Logo" class="h-12">
                 <h1 class="text-4xl font-bold">Dancakes</h1>
             </div>            
-            <!-- Desktop Navigation (Hidden on Small Screens) -->
-            <nav class="hidden md:flex space-x-6">
-                <a href="#hero" class="hover:text-gray-300">Home</a>
-                <a href="#about" class="hover:text-gray-300">About</a>
-                <a href="#products" class="hover:text-gray-300">Milk Tart</a>
-                <a href="#contact" class="hover:text-gray-300">Contact</a>
-            </nav>
-
-            <!-- Mobile Dropdown Menu -->
-            <div class="md:hidden relative">
-                <button id="menu-btn" class="text-lg font-bold bg-white text-primary px-4 py-2 rounded shadow-md">
-                    ☰ Menu
-                </button>
-                <div id="mobile-menu" class="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg overflow-hidden hidden transition-all duration-300">
-                    <a href="#hero" class="block px-4 py-2 text-primary hover:bg-gray-200">Home</a>
-                    <a href="#about" class="block px-4 py-2 text-primary hover:bg-gray-200">About</a>
-                    <a href="#products" class="block px-4 py-2 text-primary hover:bg-gray-200">Milk Tart</a>
-                    <a href="#contact" class="block px-4 py-2 text-primary hover:bg-gray-200">Contact</a>
-                </div>
-            </div>
+            <nav>
+                <ul class="flex space-x-6 text-lg">
+                    <li><a href="#hero" class="hover:text-gray-300">Home</a></li>
+                    <li><a href="#about" class="hover:text-gray-300">About</a></li>
+                    <li><a href="#products" class="hover:text-gray-300">Milk Tart</a></li>
+                    <li><a href="#contact" class="hover:text-gray-300">Contact</a></li>
+                </ul>
+            </nav>            
         </div>
     </header>
 
@@ -147,35 +135,10 @@
             <a href="https://www.instagram.com/dancakesbloemfontein/" class="mt-6 inline-block px-10 py-5 text-2xl font-bold rounded-xl btn-highlight shadow-lg transform transition hover:scale-105">Find Us</a>
         </div>
     </section>
-    
+
     <!-- Footer -->
     <footer class="bg-primary text-white text-center py-6">
         <p>Dancakes Coffee and Bakery. Celebrating National Milk Tart Day.</p>
     </footer>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const menuBtn = document.getElementById("menu-btn");
-            const mobileMenu = document.getElementById("mobile-menu");
-    
-            menuBtn.addEventListener("click", function () {
-                if (mobileMenu.classList.contains("hidden")) {
-                    mobileMenu.classList.remove("hidden");
-                    mobileMenu.classList.add("block");
-                } else {
-                    mobileMenu.classList.remove("block");
-                    mobileMenu.classList.add("hidden");
-                }
-            });
-    
-            // Close the menu when clicking outside of it
-            document.addEventListener("click", function (event) {
-                if (!menuBtn.contains(event.target) && !mobileMenu.contains(event.target)) {
-                    mobileMenu.classList.remove("block");
-                    mobileMenu.classList.add("hidden");
-                }
-            });
-        });
-    </script>
 </body>
-
 </html>
