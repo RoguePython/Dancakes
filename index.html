@@ -29,13 +29,19 @@
         .btn-highlight:hover {
             background: linear-gradient(to right, #8b5e3c, #5f4630);
         }
+        .text-shadow {
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+        }
     </style>
 </head>
 <body class="font-sans">
     <!-- Header Toolbar -->
     <header class="fixed top-0 left-0 w-full bg-primary text-white py-4 shadow-lg z-50">
         <div class="max-w-6xl mx-auto flex justify-between items-center px-6">
-            <h1 class="text-2xl font-bold">Dancakes Coffee and Bakery</h1>
+            <div class="flex items-center space-x-3">
+                <img src="logo.png" alt="Dancakes Coffee and Bakery Logo" class="h-12">
+                <h1 class="text-2xl font-bold">Dancakes Coffee and Bakery</h1>
+            </div>            
             <nav>
                 <ul class="flex space-x-6">
                     <li><a href="#hero" class="hover:text-gray-300">Home</a></li>
@@ -48,10 +54,10 @@
     </header>
 
     <!-- Hero Section -->
-    <section id="hero" class="relative h-screen bg-cover bg-center" style="background-image: url('milktart-bg.jpg');">
-        <div class="absolute inset-0 bg-primary bg-opacity-60 flex flex-col justify-center items-center text-white text-center">
-            <h1 class="text-6xl font-bold">National Milktart Day</h1>
-            <p class="mt-4 text-xl">Celebrate National Milk Tart Day with Us!</p>
+    <section id="hero" class="relative h-screen bg-cover bg-center" style="background-image: url('mini-milktarts.jpg'); background-size: cover; background-position: center;">
+        <div class="absolute inset-0 flex flex-col justify-center items-center text-white text-center">
+            <h1 class="text-6xl font-extrabold text-shadow">National Milktart Day</h1>
+            <p class="mt-4 text-xl text-shadow">Celebrate National Milk Tart Day with Us!</p>
             <a href="#products" class="mt-6 px-6 py-3 rounded-lg text-lg btn-highlight">Order Now</a>
         </div>
     </section>
