@@ -7,7 +7,7 @@
     <title>Order - Dancakes Coffee & Bakery</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js"></script>
-    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script src="https://cdn.emailjs.com/sdk/2.4.0/email.min.js"></script>
     <style>
         :root {
             --primary-bg: #5f4630;
@@ -283,15 +283,25 @@
         emailjs.init("5STVP3rNKn_9h5E9t"); // Replace with your EmailJS user ID
 
         function sendEmail(orderData) {
-            emailjs.send("service_7qm45pg", "template_1bogy1v", orderData)
-                .then(response => {
-                    console.log("✅ Email Sent!", response);
-                    alert("Order placed successfully! You will receive a confirmation email.");
-                })
-                .catch(error => {
-                    console.error("❌ Email Failed:", error);
-                    alert("Error sending order confirmation email. Please contact support.");
-                });
+            emailjs.send("service_7qm45pg", "template_1bogy1v", {
+                name: orderData.name,
+                phone: orderData.phone,
+                address: orderData.address,
+                city: orderData.city,
+                quantity: orderData.quantity,
+                totalPrice: orderData.totalPrice,
+                deliveryFee: orderData.deliveryFee,
+                paymentToken: orderData.paymentToken,
+                specialInstructions: orderData.specialInstructions
+            })
+            .then(response => {
+                console.log("✅ Email Sent!", response);
+                alert("Order placed successfully! You will receive a confirmation email.");
+            })
+            .catch(error => {
+                console.error("❌ Email Failed:", error);
+                alert("Email failed. Please check EmailJS settings.");
+            });
         }
 
         function saveOrderData() {
@@ -319,17 +329,15 @@
 </script>
 <script>
     function sendOrderToGoogleSheet(orderData) {
-    fetch("https://script.google.com/macros/s/AKfycbySqEWkZeb3nda8VScnI61UkvoNwja-yXekY6O7HXzMWz8H4nkiBYRMvnn0MPnV82MmMA/exec", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(orderData),
-        mode: "cors"
-    })
-    .then(response => response.json())
-    .then(data => console.log("✅ Order saved to Google Sheets:", data))
-    .catch(error => console.error("❌ Error saving to Google Sheets:", error));
+        fetch("https://script.google.com/macros/s/AKfycbxmXcESqdLzDamDBkLAtlQ8OyNipi2PydKobGFVXbbA65szefUE0ptPQxTpy2cvVst5qA/exec", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(orderData),
+            mode: "cors"
+        })
+        .then(response => response.json())
+        .then(data => console.log("✅ Order saved to Google Sheets:", data))
+        .catch(error => console.error("❌ Error saving to Google Sheets:", error));
     }
 </script>
 
