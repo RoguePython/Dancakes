@@ -328,16 +328,18 @@
 </script>
 <script>
     function sendOrderToGoogleSheet(orderData) {
-        fetch("https://script.google.com/macros/s/AKfycbyfWs0noNLCDeTjLDD7apsdQ1Jpl5MOgUe8qmuA4khOPJAJJR2jJ65e-1N8oYbR0Ys5/exec", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(orderData),
-            mode: "cors"
-        })
-        .then(response => response.json())
-        .then(data => console.log("✅ Order saved to Google Sheets:", data))
-        .catch(error => console.error("❌ Error saving to Google Sheets:", error));
-    }
+    fetch("https://script.google.com/macros/s/AKfycbxmW9VuGyOUYkcYEYYZ1oUEhlF2Kvmedruz3u5zxyAx148OSf0NahkSCyl4eGpRsTQqFg/exec", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(orderData),
+        mode: "cors"
+    })
+    .then(response => response.json())
+    .then(data => console.log("✅ Order saved to Google Sheets:", data))
+    .catch(error => console.error("❌ Error saving to Google Sheets:", error));
+}
 </script>
 
 </body>
