@@ -7,7 +7,6 @@
     <title>Order - Dancakes Coffee & Bakery</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
         :root {
             --primary-bg: #5f4630;
@@ -278,69 +277,7 @@
         }
     });
 </script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        emailjs.init("5STVP3rNKn_9h5E9t"); // Replace with your EmailJS user ID
-        function sendEmail(orderData) {
-            emailjs.send("service_7qm45pg", "template_1bogy1v", {
-                name: orderData.name,
-                phone: orderData.phone,
-                address: orderData.address,
-                city: orderData.city,
-                quantity: orderData.quantity,
-                totalPrice: orderData.totalPrice,
-                deliveryFee: orderData.deliveryFee,
-                paymentToken: orderData.paymentToken,
-                specialInstructions: orderData.specialInstructions
-            })
-            .then(response => {
-                console.log("✅ Email Sent!", response);
-                alert("Order placed successfully! You will receive a confirmation email.");
-            })
-            .catch(error => {
-                console.error("❌ Email Failed:", error);
-                alert("Email failed. Please check EmailJS settings.");
-            });
-        }
 
-        function saveOrderData() {
-            const orderData = {
-                name: document.getElementById("name").value,
-                phone: document.getElementById("phone").value,
-                address: document.getElementById("address").value,
-                city: document.getElementById("city").value,
-                quantity: document.getElementById("quantity").value,
-                totalPrice: document.getElementById("final-total").textContent,
-                deliveryFee: document.getElementById("delivery-fee").textContent,
-                paymentToken: document.getElementById("payment-token").value,
-                specialInstructions: document.getElementById("special-instructions").value
-            };
-
-            console.log("✅ Order Data Captured:", orderData);
-            sendEmail(orderData); // Send email
-            sendOrderToGoogleSheet(orderData); // Store in Google Sheets
-        }
-
-        document.getElementById("yoco-payment-button").addEventListener("click", function () {
-            saveOrderData();
-        });
-    });
-</script>
-<script>
-    function sendOrderToGoogleSheet(orderData) {
-    fetch("https://script.google.com/macros/s/AKfycbxmW9VuGyOUYkcYEYYZ1oUEhlF2Kvmedruz3u5zxyAx148OSf0NahkSCyl4eGpRsTQqFg/exec", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(orderData),
-        mode: "cors"
-    })
-    .then(response => response.json())
-    .then(data => console.log("✅ Order saved to Google Sheets:", data))
-    .catch(error => console.error("❌ Error saving to Google Sheets:", error));
-}
-</script>
 
 </body>
 </html>
