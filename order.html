@@ -205,34 +205,36 @@
         });
     </script>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            console.log("Initializing Yoco...");
-            
-            if (typeof YocoSDK === "undefined") {
-                console.error("❌ Yoco SDK failed to load!");
-                return;
-            }
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        console.log("Initializing Yoco...");
 
-            const yoco = new YocoSDK({
-                publicKey: "pk_test_e348b6a5mW361vr35594" // Replace with your actual Yoco public key
-            });
+        if (typeof YocoSDK === "undefined") {
+            console.error("❌ Yoco SDK failed to load!");
+            return;
+        }
 
-            const checkoutButton = document.getElementById("yoco-payment-button");
-            if (!checkoutButton) {
-                console.error("❌ Payment button not found!");
-                return;
-            }
+        const yoco = new YocoSDK({
+            publicKey: "pk_test_e348b6a5mW361vr35594" // Replace with your actual Yoco public key
+        });
 
-            checkoutButton.addEventListener("click", function (event) {
-                event.preventDefault();
-                console.log("✅ Payment button clicked - opening Yoco checkout!");
+        const checkoutButton = document.getElementById("yoco-payment-button");
+        if (!checkoutButton) {
+            console.error("❌ Payment button not found!");
+            return;
+        }
 
-                const checkout = yoco.checkout({
-                    amountInCents: 1000, // Test amount (R10)
+        checkoutButton.addEventListener("click", function (event) {
+            event.preventDefault();
+            console.log("✅ Payment button clicked - opening Yoco checkout!");
+
+            try {
+                const checkout = yoco.inline({
+                    layout: 'modal',
+                    amountInCents: calculateFinalAmount(),
                     currency: "ZAR",
                     name: "Dancakes Coffee & Bakery",
-                    description: "Test Payment",
+                    description: "Mini Milk Tart Order",
                     callback: function (result) {
                         if (result.error) {
                             console.error("❌ Payment failed:", result.error.message);
@@ -240,18 +242,25 @@
                         } else {
                             console.log("✅ Payment successful! Transaction ID:", result.id);
                             alert("Payment successful! Transaction ID: " + result.id);
+                            document.getElementById("payment-token").value = result.id;
+                            document.getElementById("order-form").submit();
                         }
                     }
                 });
 
-                if (checkout) {
-                    checkout.open();
-                } else {
-                    console.error("❌ Yoco checkout initialization failed!");
-                }
-            });
+                checkout.open();
+            } catch (error) {
+                console.error("❌ Error initializing Yoco:", error);
+            }
         });
-    </script>
+
+        function calculateFinalAmount() {
+            const totalText = document.getElementById("final-total").textContent;
+            const totalAmount = parseFloat(totalText.replace("R", "").trim());
+            return Math.round(totalAmount * 100); // Convert to cents for Yoco
+        }
+    });
+</script>
 
 </body>
 </html>
