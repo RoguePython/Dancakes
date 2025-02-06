@@ -210,9 +210,9 @@
         console.log("Initializing Yoco...");
 
         if (typeof YocoSDK === "undefined") {
-        console.error("❌ Yoco SDK failed to load!");
-        alert("Payment service is currently unavailable. Please refresh the page and try again.");
-        return;
+            console.error("❌ Yoco SDK failed to load!");
+            alert("Payment service is currently unavailable. Please refresh the page and try again.");
+            return;
         }
 
         const yoco = new YocoSDK({
@@ -226,39 +226,58 @@
         }
 
         checkoutButton.addEventListener("click", function (event) {
-        event.preventDefault();
-        console.log("✅ Payment button clicked - opening Yoco checkout!");
+            event.preventDefault();
+            console.log("✅ Payment button clicked - opening Yoco checkout!");
 
-        try {
-            yoco.showPopup({
-                amountInCents: calculateFinalAmount(),
-                currency: "ZAR",
-                name: "Dancakes Coffee & Bakery",
-                description: "Mini Milk Tart Order",
-                callback: function (result) {
-                    if (result.error) {
-                        console.error("❌ Payment failed:", result.error.message);
-                        alert("Payment failed: " + result.error.message);
-                    } else {
-                        console.log("✅ Payment successful! Transaction ID:", result.id);
-                        alert("Payment successful! Transaction ID: " + result.id);
-                        document.getElementById("payment-token").value = result.id;
-                        document.getElementById("order-form").submit();
+            try {
+                yoco.showPopup({
+                    amountInCents: calculateFinalAmount(),
+                    currency: "ZAR",
+                    name: "Dancakes Coffee & Bakery",
+                    description: "Mini Milk Tart Order",
+                    callback: function (result) {
+                        if (result.error) {
+                            console.error("❌ Payment failed:", result.error.message);
+                            alert("Payment failed: " + result.error.message);
+                        } else {
+                            console.log("✅ Payment successful! Transaction ID:", result.id);
+                            alert("Payment successful! Transaction ID: " + result.id);
+                            document.getElementById("payment-token").value = result.id;
+                            saveOrderData();
+                        }
                     }
-                }
-            });
-        } catch (error) {
-            console.error("❌ Error initializing Yoco:", error);
-        }
-    });
+                });
+            } catch (error) {
+                console.error("❌ Error initializing Yoco:", error);
+            }
+        });
 
         function calculateFinalAmount() {
             const totalText = document.getElementById("final-total").textContent;
             const totalAmount = parseFloat(totalText.replace("R", "").trim());
             return Math.round(totalAmount * 100); // Convert to cents for Yoco
         }
+
+        function saveOrderData() {
+            const orderData = {
+                name: document.getElementById("name").value,
+                phone: document.getElementById("phone").value,
+                address: document.getElementById("address").value,
+                city: document.getElementById("city").value,
+                quantity: document.getElementById("quantity").value,
+                totalPrice: document.getElementById("final-total").textContent,
+                deliveryFee: document.getElementById("delivery-fee").textContent,
+                paymentToken: document.getElementById("payment-token").value,
+                specialInstructions: document.getElementById("special-instructions").value
+            };
+
+            console.log("✅ Order Data Captured:", orderData);
+            localStorage.setItem("dancakes_order", JSON.stringify(orderData));
+            alert("Order captured successfully!");
+        }
     });
 </script>
+
 
 </body>
 </html>
