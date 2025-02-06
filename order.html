@@ -7,6 +7,7 @@
     <title>Order - Dancakes Coffee & Bakery</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js"></script>
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
     <style>
         :root {
             --primary-bg: #5f4630;
@@ -277,7 +278,55 @@
         }
     });
 </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        emailjs.init("your-public-key"); // Replace with your EmailJS Public Key
 
+        function sendOrderEmail(orderData) {
+            emailjs.send("your-service-id", "your-template-id", {
+                name: orderData.name,
+                phone: orderData.phone,
+                address: orderData.address,
+                city: orderData.city,
+                quantity: orderData.quantity,
+                totalPrice: orderData.totalPrice,
+                deliveryFee: orderData.deliveryFee,
+                paymentToken: orderData.paymentToken,
+                specialInstructions: orderData.specialInstructions
+            }).then(
+                function(response) {
+                    console.log("✅ Email sent successfully!", response);
+                    alert("Order confirmation email sent!");
+                },
+                function(error) {
+                    console.error("❌ Error sending email:", error);
+                    alert("Failed to send order email.");
+                }
+            );
+        }
+
+        function saveOrderData() {
+            const orderData = {
+                name: document.getElementById("name").value,
+                phone: document.getElementById("phone").value,
+                address: document.getElementById("address").value,
+                city: document.getElementById("city").value,
+                quantity: document.getElementById("quantity").value,
+                totalPrice: document.getElementById("final-total").textContent,
+                deliveryFee: document.getElementById("delivery-fee").textContent,
+                paymentToken: document.getElementById("payment-token").value,
+                specialInstructions: document.getElementById("special-instructions").value
+            };
+
+            console.log("✅ Order Data Captured:", orderData);
+            localStorage.setItem("dancakes_order", JSON.stringify(orderData));
+            alert("Order captured successfully!");
+            
+            // Send order email
+            sendOrderEmail(orderData);
+        }
+    });
+</script>
 
 </body>
 </html>
