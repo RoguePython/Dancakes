@@ -280,7 +280,7 @@
 </script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        emailjs.init("8B-J-u_5eeuCXIXgD_l5I"); // Replace with your EmailJS user ID
+        emailjs.init("5STVP3rNKn_9h5E9t"); // Replace with your EmailJS user ID
 
         function sendEmail(orderData) {
             emailjs.send("service_7qm45pg", "template_1bogy1v", orderData)
@@ -319,14 +319,17 @@
 </script>
 <script>
     function sendOrderToGoogleSheet(orderData) {
-        fetch("https://script.google.com/macros/s/AKfycbyNorJvEaFF-_7FIWiDKFhF5-MM-hY7R-hfcDXG9OHEG6_LqEXSQpBpNAPrBPs45hLETQ/exec", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(orderData)
-        })
-        .then(response => response.text())
-        .then(data => console.log("✅ Order saved to Google Sheets:", data))
-        .catch(error => console.error("❌ Error saving to Google Sheets:", error));
+    fetch("https://script.google.com/macros/s/AKfycbySqEWkZeb3nda8VScnI61UkvoNwja-yXekY6O7HXzMWz8H4nkiBYRMvnn0MPnV82MmMA/exec", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(orderData),
+        mode: "cors"
+    })
+    .then(response => response.json())
+    .then(data => console.log("✅ Order saved to Google Sheets:", data))
+    .catch(error => console.error("❌ Error saving to Google Sheets:", error));
     }
 </script>
 
