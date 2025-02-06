@@ -7,7 +7,7 @@
     <title>Order - Dancakes Coffee & Bakery</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js"></script>
-    <script src="https://cdn.emailjs.com/sdk/2.4.0/email.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
         :root {
             --primary-bg: #5f4630;
@@ -281,7 +281,6 @@
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         emailjs.init("5STVP3rNKn_9h5E9t"); // Replace with your EmailJS user ID
-
         function sendEmail(orderData) {
             emailjs.send("service_7qm45pg", "template_1bogy1v", {
                 name: orderData.name,
