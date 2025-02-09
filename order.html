@@ -313,7 +313,7 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        alert("A confirmation email has been sent.");
+                        alert("A confirmation email has been sent. Remember to check your spam folder!");
                     } else {
                         alert("Error sending email: " + data.message);
                     }
