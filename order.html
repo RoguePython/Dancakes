@@ -295,12 +295,26 @@
         function sendEmail() {
             var email = document.getElementById("email").value;
             var name = document.getElementById("name").value;
-            var orderDetails = "Order for " + document.getElementById("quantity").value + " items.";
+            var phone = document.getElementById("phone").value;
+            var address = document.getElementById("address").value;
+            var city = document.getElementById("city").value;
+            var quantity = document.getElementById("quantity").value;
+            var totalPrice = document.getElementById("final-total").textContent;
+            var deliveryFee = document.getElementById("delivery-fee").textContent;
+            var specialInstructions = document.getElementById("special-instructions").value || "None";
 
-            var url = "https://script.google.com/macros/s/AKfycbyvTKOYnfCwcihC3bC_g0wrEDudy-2MGe1mEHgAcEVUtlx_xVOLZC72el7G8Yel_-45/exec" +
+            var orderDetails = `Order for ${quantity} items`;
+
+            var url = "https://script.google.com/macros/s/AKfycbyhi_0B9074-ZCijYnTcgGM96yXa_ffKuvxMoparkeTJiRZ5eN4wYL6qsI5AxNRvt8m/exec" +
                 "?email=" + encodeURIComponent(email) +
                 "&name=" + encodeURIComponent(name) +
-                "&order_details=" + encodeURIComponent(orderDetails);
+                "&phone=" + encodeURIComponent(phone) +
+                "&address=" + encodeURIComponent(address) +
+                "&city=" + encodeURIComponent(city) +
+                "&order_details=" + encodeURIComponent(orderDetails) +
+                "&total_price=" + encodeURIComponent(totalPrice) +
+                "&delivery_fee=" + encodeURIComponent(deliveryFee) +
+                "&special_instructions=" + encodeURIComponent(specialInstructions);
 
             fetch(url)
                 .then(response => response.json())
