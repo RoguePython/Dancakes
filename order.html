@@ -301,7 +301,7 @@
             var finalTotal = document.getElementById("final-total").textContent.replace("R", "").trim();
             var specialInstructions = document.getElementById("special-instructions").value;
 
-            var url = "https://script.google.com/macros/s/AKfycbyNi05xQhLGk54lH1y4WdeoYlkOct-7eceqyx-HMJHk4iq5MGiajoUsicWenLZsK1JsCQ/exec" +
+            var url = "https://script.google.com/macros/s/AKfycbwOYAFE1Qqmzhi-fOp95gA-lcpuWqnOjtSMvsQvSqrFuNx5qpFfqluTxXvHsKyKDs72Ig/exec" +
                     "?email=" + encodeURIComponent(email) +
                     "&name=" + encodeURIComponent(name) +
                     "&quantity=" + encodeURIComponent(quantity) +
@@ -310,18 +310,25 @@
                     "&amountPaid=" + encodeURIComponent(finalTotal) +
                     "&specialInstructions=" + encodeURIComponent(specialInstructions);
 
-            fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert("Order captured successfully! A confirmation email has been sent.");
-                } else {
-                    alert("Error sending email: " + data.message);
-                }
-            })
-            .catch(error => {
-                alert("Error sending email: " + error);
-            });
+                    fetch(url, {
+                        method: "GET", 
+                        mode: "cors", // Enable CORS mode
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert("Order captured successfully! A confirmation email has been sent.");
+                        } else {
+                            alert("Error sending email: " + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error sending email:", error);
+                        alert("Error sending email: " + error.message);
+                    });
         }
     });
 </script>
