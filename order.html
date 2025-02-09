@@ -295,40 +295,25 @@
         function sendEmail() {
             var email = document.getElementById("email").value;
             var name = document.getElementById("name").value;
-            var quantity = document.getElementById("quantity").value;
-            var totalPrice = document.getElementById("total-price").textContent.replace("R", "").trim();
-            var deliveryFee = document.getElementById("delivery-fee").textContent.replace("R", "").trim();
-            var finalTotal = document.getElementById("final-total").textContent.replace("R", "").trim();
-            var specialInstructions = document.getElementById("special-instructions").value;
+            var orderDetails = "Order for " + document.getElementById("quantity").value + " items.";
 
-            var url = "https://script.google.com/macros/s/AKfycbyvTKOYnfCwcihC3bC_g0wrEDudy-2MGe1mEHgAcEVUtlx_xVOLZC72el7G8Yel_-45/exec" +
-                    "?email=" + encodeURIComponent(email) +
-                    "&name=" + encodeURIComponent(name) +
-                    "&quantity=" + encodeURIComponent(quantity) +
-                    "&totalPrice=" + encodeURIComponent(totalPrice) +
-                    "&deliveryFee=" + encodeURIComponent(deliveryFee) +
-                    "&amountPaid=" + encodeURIComponent(finalTotal) +
-                    "&specialInstructions=" + encodeURIComponent(specialInstructions);
+            var url = "https://script.google.com/macros/s/AKfycbyFMCtFUi_7tvle_JaxasmxIrxUw771232p4yXdShTnmenh64yTc5voPd_INEZK7sTLX/exec" +
+                "?email=" + encodeURIComponent(email) +
+                "&name=" + encodeURIComponent(name) +
+                "&order_details=" + encodeURIComponent(orderDetails);
 
-                    fetch(url, {
-                        method: "GET", 
-                        mode: "cors", // Enable CORS mode
-                        headers: {
-                            "Content-Type": "application/json"
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert("Order captured successfully! A confirmation email has been sent.");
-                        } else {
-                            alert("Error sending email: " + data.message);
-                        }
-                    })
-                    .catch(error => {
-                        console.error("Error sending email:", error);
-                        alert("Error sending email: " + error.message);
-                    });
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Order captured successfully! A confirmation email has been sent.");
+                    } else {
+                        alert("Error sending email: " + data.message);
+                    }
+                })
+                .catch(error => {
+                    alert("Error sending email: " + error);
+                });
         }
     });
 </script>
