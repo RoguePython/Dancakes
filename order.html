@@ -150,7 +150,7 @@
                 <section class="mt-6">
                     <h3 class="text-xl font-medium text-primary">Please Note</h3>
                     <ul class="list-disc pl-5 text-gray-700 text-sm">
-                        <li><strong>All deliveries will take place on National Milk Tart Day (28th February).</strong></li>
+                        <li><strong>All deliveries will take place on National Milk Tart Day (27th February).</strong></li>
                         <li><strong>Delivery time is between 08:00 and 10:30.</strong> Please ensure someone is available to receive your order.</li>
                         <li>Orders placed after <strong>16:00 on 27th February</strong> will not be processed.</li>
                         <li>Delivery is only available within <strong>Bloemfontein</strong></li>
@@ -295,33 +295,39 @@
         function sendEmail() {
             var email = document.getElementById("email").value;
             var name = document.getElementById("name").value;
+            var phone = document.getElementById("phone").value;
+            var address = document.getElementById("address").value;
+            var city = document.getElementById("city").value;
             var quantity = document.getElementById("quantity").value;
-            var totalPrice = document.getElementById("total-price").textContent.replace("R", "").trim();
-            var deliveryFee = document.getElementById("delivery-fee").textContent.replace("R", "").trim();
-            var finalTotal = document.getElementById("final-total").textContent.replace("R", "").trim();
-            var specialInstructions = document.getElementById("special-instructions").value;
+            var totalPrice = document.getElementById("final-total").textContent;
+            var deliveryFee = document.getElementById("delivery-fee").textContent;
+            var specialInstructions = document.getElementById("special-instructions").value || "None";
+
+            var orderDetails = `Order for ${quantity} items`;
 
             var url = "https://script.google.com/macros/s/AKfycbx_NzDa7PQazk6Ju0Q7c-_TKMkgTtq6swbnKLufD46NY8l-ySoz0XenISlRwzQ9-_B-/exec" +
-                    "?email=" + encodeURIComponent(email) +
-                    "&name=" + encodeURIComponent(name) +
-                    "&quantity=" + encodeURIComponent(quantity) +
-                    "&totalPrice=" + encodeURIComponent(totalPrice) +
-                    "&deliveryFee=" + encodeURIComponent(deliveryFee) +
-                    "&amountPaid=" + encodeURIComponent(finalTotal) +
-                    "&specialInstructions=" + encodeURIComponent(specialInstructions);
+                "?email=" + encodeURIComponent(email) +
+                "&name=" + encodeURIComponent(name) +
+                "&phone=" + encodeURIComponent(phone) +
+                "&address=" + encodeURIComponent(address) +
+                "&city=" + encodeURIComponent(city) +
+                "&order_details=" + encodeURIComponent(orderDetails) +
+                "&total_price=" + encodeURIComponent(totalPrice) +
+                "&delivery_fee=" + encodeURIComponent(deliveryFee) +
+                "&special_instructions=" + encodeURIComponent(specialInstructions);
 
             fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert("Order captured successfully! A confirmation email has been sent.");
-                } else {
-                    alert("Error sending email: " + data.message);
-                }
-            })
-            .catch(error => {
-                alert("Error sending email: " + error);
-            });
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Order captured successfully! A confirmation email has been sent.");
+                    } else {
+                        alert("Error sending email: " + data.message);
+                    }
+                })
+                .catch(error => {
+                    alert("Error sending email: " + error);
+                });
         }
     });
 </script>
