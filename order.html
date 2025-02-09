@@ -150,7 +150,7 @@
                 <section class="mt-6">
                     <h3 class="text-xl font-medium text-primary">Please Note</h3>
                     <ul class="list-disc pl-5 text-gray-700 text-sm">
-                        <li><strong>All deliveries will take place on National Milk Tart Day (2th February).</strong></li>
+                        <li><strong>All deliveries will take place on National Milk Tart Day (28th February).</strong></li>
                         <li><strong>Delivery time is between 08:00 and 10:30.</strong> Please ensure someone is available to receive your order.</li>
                         <li>Orders placed after <strong>16:00 on 27th February</strong> will not be processed.</li>
                         <li>Delivery is only available within <strong>Bloemfontein</strong></li>
@@ -160,24 +160,11 @@
 
                 <section>
                     <h3 class="text-xl font-medium text-primary">Payment</h3>
-                    <p class="text-gray-600">Select a payment method:</p>
+                    <p class="text-gray-600">Secure online payments powered by Yoco.</p>
                 
-                    <div class="mt-2">
-                        <label class="inline-flex items-center">
-                            <input type="radio" name="payment_method" value="online" checked class="payment-method">
-                            <span class="ml-2">Pay Online (Yoco)</span>
-                        </label>
-                    </div>
-                    <div class="mt-2">
-                        <label class="inline-flex items-center">
-                            <input type="radio" name="payment_method" value="card_on_delivery" class="payment-method">
-                            <span class="ml-2">Pay with Card on Delivery</span>
-                        </label>
-                    </div>
+                    <input type="hidden" id="payment-token" name="payment_token"> <!-- Stores the transaction ID -->
                 
-                    <input type="hidden" id="payment-token" name="payment_token"> <!-- Stores transaction ID -->
-                
-                    <div id="yoco-payment-section" class="mt-4">
+                    <div class="mt-4">
                         <button id="yoco-payment-button" class="w-full py-4 text-lg btn-primary rounded-md hover:bg-highlight transition">
                             Pay with Card
                         </button>
@@ -235,74 +222,48 @@
     document.addEventListener("DOMContentLoaded", function () {
         console.log("Initializing Yoco...");
 
-        const paymentMethods = document.querySelectorAll(".payment-method");
-        const yocoButton = document.getElementById("yoco-payment-button");
-        const yocoSection = document.getElementById("yoco-payment-section");
-        const deliveryMessage = document.getElementById("cash-delivery-message");
-
-        // Update button text based on selected payment method
-        function updateButtonText() {
-            const selectedMethod = document.querySelector('input[name="payment_method"]:checked').value;
-            if (selectedMethod === "card_on_delivery") {
-                yocoButton.textContent = "Place Order";
-                yocoSection.style.display = "block"; // Keep the button visible
-                deliveryMessage.style.display = "block";
-            } else {
-                yocoButton.textContent = "Pay now and place order";
-                yocoSection.style.display = "block"; // Ensure the button is visible
-                deliveryMessage.style.display = "none";
-            }
+        if (typeof YocoSDK === "undefined") {
+            console.error("❌ Yoco SDK failed to load!");
+            alert("Payment service is currently unavailable. Please refresh the page and try again.");
+            return;
         }
 
-        // Listen for payment method changes
-        paymentMethods.forEach(method => {
-            method.addEventListener("change", updateButtonText);
+        const yoco = new YocoSDK({
+            publicKey: "pk_test_e348b6a5mW361vr35594"
         });
 
-        // Update button on page load
-        updateButtonText();
+        const checkoutButton = document.getElementById("yoco-payment-button");
+        if (!checkoutButton) {
+            console.error("❌ Payment button not found!");
+            return;
+        }
 
-        // Payment button event listener
-        yocoButton.addEventListener("click", function (event) {
+        checkoutButton.addEventListener("click", function (event) {
             event.preventDefault();
+            console.log("✅ Payment button clicked - opening Yoco checkout!");
 
-            const selectedMethod = document.querySelector('input[name="payment_method"]:checked').value;
-            if (selectedMethod === "card_on_delivery") {
-                alert("Your order has been placed. Pay with your card upon delivery.");
-                saveOrderData(false); // Save order without Yoco payment
-                return;
-            }
-
-            // Process Yoco payment as usual
-            processYocoPayment();
-        });
-
-        function processYocoPayment() {
-            if (result.error) {
-                alert("Payment failed: " + result.error.message);
-            } else {
-                document.getElementById("payment-token").value = result.id;
-                saveOrderData(true);
-                sendEmail(); // <-- Only call sendEmail() after successful payment
-            }
-
-            const yoco = new YocoSDK({ publicKey: "pk_test_e348b6a5mW361vr35594" });
-
-            yoco.showPopup({
-                amountInCents: calculateFinalAmount(),
-                currency: "ZAR",
-                name: "Dancakes Coffee & Bakery",
-                description: "Mini Milk Tart Order",
-                callback: function (result) {
-                    if (result.error) {
-                        alert("Payment failed: " + result.error.message);
-                    } else {
-                        document.getElementById("payment-token").value = result.id;
-                        saveOrderData(true);
+            try {
+                yoco.showPopup({
+                    amountInCents: calculateFinalAmount(),
+                    currency: "ZAR",
+                    name: "Dancakes Coffee & Bakery",
+                    description: "Mini Milk Tart Order",
+                    callback: function (result) {
+                        if (result.error) {
+                            console.error("❌ Payment failed:", result.error.message);
+                            alert("Payment failed: " + result.error.message);
+                        } else {
+                            console.log("✅ Payment successful! Transaction ID:", result.id);
+                            alert("Payment successful! Transaction ID: " + result.id);
+                            document.getElementById("payment-token").value = result.id;
+                            saveOrderData();
+                        }
                     }
-                }
-            });
-        }
+                });
+            } catch (error) {
+                console.error("❌ Error initializing Yoco:", error);
+            }
+        });
 
         function calculateFinalAmount() {
             const totalText = document.getElementById("final-total").textContent;
@@ -310,53 +271,36 @@
             return Math.round(totalAmount * 100); // Convert to cents for Yoco
         }
 
-        function saveOrderData(isPaidOnline) {
+        function saveOrderData() {
             const orderData = {
                 name: document.getElementById("name").value,
                 phone: document.getElementById("phone").value,
-                email: document.getElementById("email").value,
+                email: document.getElementById("email").value, // Capture email
                 address: document.getElementById("address").value,
                 city: document.getElementById("city").value,
                 quantity: document.getElementById("quantity").value,
                 totalPrice: document.getElementById("final-total").textContent,
                 deliveryFee: document.getElementById("delivery-fee").textContent,
-                paymentToken: isPaidOnline ? document.getElementById("payment-token").value : "Card on Delivery",
+                paymentToken: document.getElementById("payment-token").value,
                 specialInstructions: document.getElementById("special-instructions").value
             };
 
             console.log("✅ Order Data Captured:", orderData);
             localStorage.setItem("dancakes_order", JSON.stringify(orderData));
-
-            if (isPaidOnline || orderData.paymentToken === "Card on Delivery") {
-                sendEmail(); // Only send email for successful payments or cash on delivery
-            } else {
-                alert("Payment was not successful. No email has been sent.");
-            }
+            // Send confirmation Email
+            sendEmail();
+            alert("Order captured successfully!");
         }
 
         function sendEmail() {
             var email = document.getElementById("email").value;
             var name = document.getElementById("name").value;
-            var phone = document.getElementById("phone").value;
-            var address = document.getElementById("address").value;
-            var city = document.getElementById("city").value;
-            var quantity = document.getElementById("quantity").value;
-            var totalPrice = document.getElementById("final-total").textContent;
-            var deliveryFee = document.getElementById("delivery-fee").textContent;
-            var specialInstructions = document.getElementById("special-instructions").value || "None";
+            var orderDetails = "Order for " + document.getElementById("quantity").value + " items.";
 
-            var orderDetails = `Order for ${quantity} items`;
-
-            var url = "https://script.google.com/macros/s/AKfycbx_NzDa7PQazk6Ju0Q7c-_TKMkgTtq6swbnKLufD46NY8l-ySoz0XenISlRwzQ9-_B-/exec" +
+            var url = "https://script.google.com/macros/s/AKfycbyvTKOYnfCwcihC3bC_g0wrEDudy-2MGe1mEHgAcEVUtlx_xVOLZC72el7G8Yel_-45/exec" +
                 "?email=" + encodeURIComponent(email) +
                 "&name=" + encodeURIComponent(name) +
-                "&phone=" + encodeURIComponent(phone) +
-                "&address=" + encodeURIComponent(address) +
-                "&city=" + encodeURIComponent(city) +
-                "&order_details=" + encodeURIComponent(orderDetails) +
-                "&total_price=" + encodeURIComponent(totalPrice) +
-                "&delivery_fee=" + encodeURIComponent(deliveryFee) +
-                "&special_instructions=" + encodeURIComponent(specialInstructions);
+                "&order_details=" + encodeURIComponent(orderDetails);
 
             fetch(url)
                 .then(response => response.json())
