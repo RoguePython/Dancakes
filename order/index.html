@@ -244,25 +244,7 @@
         }
 
         checkoutButton.addEventListener("click", function (event) {
-            // Validate required fields
-            const requiredFields = document.querySelectorAll("input[required], textarea[required]");
-            let formValid = true;
-
-            requiredFields.forEach(field => {
-                if (!field.value.trim()) {
-                    field.classList.add("border-red-500"); // Highlight the empty field
-                    field.focus();
-                    formValid = false;
-                } else {
-                    field.classList.remove("border-red-500"); // Remove highlight if corrected
-                }
-            });
-
-            if (!formValid) {
-                alert("Please fill in all required fields before proceeding.");
-                event.preventDefault(); // Stop form submission
-                return;
-            }
+            event.preventDefault();
 
             if (payNowOption.checked) {
                 console.log("✅ Pay Now selected - opening Yoco checkout!");
