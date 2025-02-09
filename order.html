@@ -284,17 +284,16 @@
         }
 
         function sendEmail() {
-            var data = {
-                name: document.getElementById("name").value,
-                email: document.getElementById("email").value,
-                order_details: "Order for " + document.getElementById("quantity").value + " items."
-            };
+            var email = document.getElementById("email").value;
+            var name = document.getElementById("name").value;
+            var orderDetails = "Order for " + document.getElementById("quantity").value + " items.";
 
-            fetch("https://script.google.com/macros/s/AKfycbyDUE7DgJzjsWGLqoWitmma3qLCDESN7UyN0QPBX-XW-8r9HmdyLvoB-V5bZoGuIQUP/exec", {  // Replace with your Web App URL
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data)
-            })
+            var url = "https://script.google.com/macros/s/AKfycbxhKN-VV8RGqrxd1pJhIyVuNqEQqcqrd4qg-OlB5opIqe61buJF9uRdI7t1u5ZLBpaY/exec" + 
+                    "?email=" + encodeURIComponent(email) +
+                    "&name=" + encodeURIComponent(name) +
+                    "&order_details=" + encodeURIComponent(orderDetails);
+
+            fetch(url)
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
