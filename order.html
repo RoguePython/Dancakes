@@ -295,12 +295,20 @@
         function sendEmail() {
             var email = document.getElementById("email").value;
             var name = document.getElementById("name").value;
-            var orderDetails = "Order for " + document.getElementById("quantity").value + " items.";
+            var quantity = document.getElementById("quantity").value;
+            var totalPrice = document.getElementById("total-price").textContent.replace("R", "").trim();
+            var deliveryFee = document.getElementById("delivery-fee").textContent.replace("R", "").trim();
+            var finalTotal = document.getElementById("final-total").textContent.replace("R", "").trim();
+            var specialInstructions = document.getElementById("special-instructions").value;
 
-            var url = "https://script.google.com/macros/s/AKfycbxp4Zatgnd30HEonX9E5CUyVX_QZxH-zGtKxQf0RZCntKqOscxrAua03b8kle_rUyrp6Q/exec" + 
+            var url = "https://script.google.com/macros/s/AKfycbyNi05xQhLGk54lH1y4WdeoYlkOct-7eceqyx-HMJHk4iq5MGiajoUsicWenLZsK1JsCQ/exec" +
                     "?email=" + encodeURIComponent(email) +
                     "&name=" + encodeURIComponent(name) +
-                    "&order_details=" + encodeURIComponent(orderDetails);
+                    "&quantity=" + encodeURIComponent(quantity) +
+                    "&totalPrice=" + encodeURIComponent(totalPrice) +
+                    "&deliveryFee=" + encodeURIComponent(deliveryFee) +
+                    "&amountPaid=" + encodeURIComponent(finalTotal) +
+                    "&specialInstructions=" + encodeURIComponent(specialInstructions);
 
             fetch(url)
             .then(response => response.json())
