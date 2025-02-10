@@ -335,35 +335,48 @@
                 });
         }
         function validateOrderForm(event) {
-            
             const form = document.querySelector("form");
-            const requiredFields = form.querySelectorAll('[required]');
+            const emailField = form.querySelector("input[type='email']");
+            const requiredFields = form.querySelectorAll("[required]");
             let firstInvalidField = null;
 
+            // Clear previous errors
             requiredFields.forEach(field => {
-                field.classList.remove('invalid');
-                const existingError = field.parentNode.querySelector('.error-message');
+                field.classList.remove("invalid");
+                const existingError = field.parentNode.querySelector(".error-message");
                 if (existingError) existingError.remove();
             });
 
+            // Check required fields
             for (const field of requiredFields) {
-                if (!field.value.trim()) {
+                if (field.type === "email") {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(field.value.trim())) {
+                        firstInvalidField = field;
+                        break;
+                    }
+                } else if (!field.value.trim()) {
                     firstInvalidField = field;
                     break;
                 }
             }
 
             if (firstInvalidField) {
-                firstInvalidField.classList.add('invalid');
-                const errorMessage = document.createElement('span');
-                errorMessage.className = 'error-message';
-                errorMessage.textContent = 'Please fill out this field!';
+                firstInvalidField.classList.add("invalid");
+                const errorMessage = document.createElement("span");
+                errorMessage.className = "error-message";
+                errorMessage.textContent = firstInvalidField.type === "email"
+                    ? "Please enter a valid email address."
+                    : "This field is required.";
                 firstInvalidField.parentNode.insertBefore(errorMessage, firstInvalidField.nextSibling);
                 firstInvalidField.focus();
-                return false; //Validation failed
-            } else {
-                return true; //validation passed
+
+                // **Prevent form submission**
+                event.preventDefault();
+                return false;
             }
+
+            return true;
         }
         });
     </script>
