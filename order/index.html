@@ -244,6 +244,7 @@
         }
 
         checkoutButton.addEventListener("click", function (event) {
+    event.preventDefault(); // Prevent default form submission
 
             // Validate form before proceeding
             if (!validateOrderForm()) {
@@ -334,48 +335,38 @@
                     alert("Error sending email: " + error);
                 });
         }
-        function validateOrderForm(event) {
-            event.preventDefault(); // Always prevent form submission
-
+        function validateOrderForm() {
             const form = document.querySelector("form");
-            const emailField = form.querySelector("input[type='email']");
-            const requiredFields = form.querySelectorAll("[required]");
+            const requiredFields = form.querySelectorAll('[required]');
             let firstInvalidField = null;
 
             // Clear previous errors
             requiredFields.forEach(field => {
-                field.classList.remove("invalid");
-                const existingError = field.parentNode.querySelector(".error-message");
+                field.classList.remove('invalid');
+                const existingError = field.parentNode.querySelector('.error-message');
                 if (existingError) existingError.remove();
             });
 
-            // Check required fields
             for (const field of requiredFields) {
-                if (field.type === "email") {
-                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                    if (!emailRegex.test(field.value.trim())) {
-                        firstInvalidField = field;
-                        break;
-                    }
-                } else if (!field.value.trim()) {
+                if (!field.value.trim()) {
                     firstInvalidField = field;
                     break;
                 }
             }
 
             if (firstInvalidField) {
-                firstInvalidField.classList.add("invalid");
-                const errorMessage = document.createElement("span");
-                errorMessage.className = "error-message";
-                errorMessage.textContent = firstInvalidField.type === "email"
-                    ? "Please enter a valid email address."
-                    : "This field is required.";
+                firstInvalidField.classList.add('invalid');
+
+                const errorMessage = document.createElement('span');
+                errorMessage.className = 'error-message';
+                errorMessage.textContent = 'Please fill out this field!';
                 firstInvalidField.parentNode.insertBefore(errorMessage, firstInvalidField.nextSibling);
+
                 firstInvalidField.focus();
-                return false;
+                return false; // ❌ Validation failed
             }
 
-            return true;
+            return true; // ✅ Validation passed
         }
         });
     </script>
