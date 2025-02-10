@@ -335,6 +335,8 @@
                 });
         }
         function validateOrderForm(event) {
+            event.preventDefault(); // Always prevent form submission
+
             const form = document.querySelector("form");
             const emailField = form.querySelector("input[type='email']");
             const requiredFields = form.querySelectorAll("[required]");
