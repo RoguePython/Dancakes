@@ -244,13 +244,7 @@
         }
 
         checkoutButton.addEventListener("click", function (event) {
-    event.preventDefault(); // Prevent default form submission
-
-            // Validate form before proceeding
-            if (!validateOrderForm()) {
-                console.log("❌ Form validation failed.");
-                return; // Stop further execution if validation fails
-            }
+            event.preventDefault();
 
             if (payNowOption.checked) {
                 console.log("✅ Pay Now selected - opening Yoco checkout!");
@@ -268,11 +262,7 @@
                                 console.log("✅ Payment successful! Transaction ID:", result.id);
                                 alert("Payment successful! You will soon receive a confirmation email.");
                                 document.getElementById("payment-token").value = result.id;
-
-                                sendEmail(); // Send confirmation email
-
-                                // ✅ Submit the form after payment is successful
-                                document.querySelector("form").submit();
+                                sendEmail();
                             }
                         }
                     });
@@ -283,9 +273,6 @@
                 console.log("✅ Pay on Delivery selected - skipping Yoco and sending email.");
                 sendEmail();
                 alert("Your order has been placed! Please have your card ready upon delivery.");
-
-                // ✅ Submit form for pay on delivery
-                document.querySelector("form").submit();
             }
         });
 
@@ -334,39 +321,6 @@
                 .catch(error => {
                     alert("Error sending email: " + error);
                 });
-        }
-        function validateOrderForm() {
-            const form = document.querySelector("form");
-            const requiredFields = form.querySelectorAll('[required]');
-            let firstInvalidField = null;
-
-            // Clear previous errors
-            requiredFields.forEach(field => {
-                field.classList.remove('invalid');
-                const existingError = field.parentNode.querySelector('.error-message');
-                if (existingError) existingError.remove();
-            });
-
-            for (const field of requiredFields) {
-                if (!field.value.trim()) {
-                    firstInvalidField = field;
-                    break;
-                }
-            }
-
-            if (firstInvalidField) {
-                firstInvalidField.classList.add('invalid');
-
-                const errorMessage = document.createElement('span');
-                errorMessage.className = 'error-message';
-                errorMessage.textContent = 'Please fill out this field!';
-                firstInvalidField.parentNode.insertBefore(errorMessage, firstInvalidField.nextSibling);
-
-                firstInvalidField.focus();
-                return false; // ❌ Validation failed
-            }
-
-            return true; // ✅ Validation passed
         }
         });
     </script>
