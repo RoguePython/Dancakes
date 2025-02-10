@@ -244,7 +244,6 @@
         }
 
         checkoutButton.addEventListener("click", function (event) {
-    event.preventDefault(); // Prevent default form submission
 
             // Validate form before proceeding
             if (!validateOrderForm()) {
@@ -335,12 +334,12 @@
                     alert("Error sending email: " + error);
                 });
         }
-        function validateOrderForm() {
+        function validateOrderForm(event) {
+            
             const form = document.querySelector("form");
             const requiredFields = form.querySelectorAll('[required]');
             let firstInvalidField = null;
 
-            // Clear previous errors
             requiredFields.forEach(field => {
                 field.classList.remove('invalid');
                 const existingError = field.parentNode.querySelector('.error-message');
@@ -356,17 +355,15 @@
 
             if (firstInvalidField) {
                 firstInvalidField.classList.add('invalid');
-
                 const errorMessage = document.createElement('span');
                 errorMessage.className = 'error-message';
                 errorMessage.textContent = 'Please fill out this field!';
                 firstInvalidField.parentNode.insertBefore(errorMessage, firstInvalidField.nextSibling);
-
                 firstInvalidField.focus();
-                return false; // ❌ Validation failed
+                return false; //Validation failed
+            } else {
+                return true; //validation passed
             }
-
-            return true; // ✅ Validation passed
         }
         });
     </script>
