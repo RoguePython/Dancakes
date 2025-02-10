@@ -222,30 +222,41 @@
         });
     </script>
 
-    <script>
+<script>
     document.addEventListener("DOMContentLoaded", function () {
         if (typeof YocoSDK === "undefined") {
             console.error("❌ Yoco SDK failed to load!");
             alert("Payment service is currently unavailable. Please refresh the page and try again.");
             return;
         }
-
+    
         const yoco = new YocoSDK({
             publicKey: "pk_test_e348b6a5mW361vr35594"
         });
-
+    
         const checkoutButton = document.getElementById("place-order-button");
         const payNowOption = document.getElementById("pay-now");
         const payOnDeliveryOption = document.getElementById("pay-on-delivery");
-
+    
         if (!checkoutButton) {
             console.error("❌ Payment button not found!");
             return;
         }
-
+    
         checkoutButton.addEventListener("click", function (event) {
+            // Get the form that contains the checkout button
+            const form = checkoutButton.closest("form");
+    
+            // If the form isn't valid according to HTML5 validations, display errors and stop.
+            if (!form.checkValidity()) {
+                form.reportValidity(); // This shows the built-in validation messages.
+                return;             // Exit without proceeding to payment.
+            }
+    
+            // Now that the form is valid, prevent the default form submission
+            // and continue with the custom payment processing.
             event.preventDefault();
-
+    
             if (payNowOption.checked) {
                 console.log("✅ Pay Now selected - opening Yoco checkout!");
                 try {
@@ -275,13 +286,13 @@
                 alert("Your order has been placed! Please have your card ready upon delivery.");
             }
         });
-
+    
         function calculateFinalAmount() {
             const totalText = document.getElementById("final-total").textContent;
             const totalAmount = parseFloat(totalText.replace("R", "").trim());
             return Math.round(totalAmount * 100); // Convert to cents for Yoco
         }
-
+    
         function sendEmail() {
             var email = document.getElementById("email").value;
             var name = document.getElementById("name").value;
@@ -293,10 +304,10 @@
             var deliveryFee = document.getElementById("delivery-fee").textContent;
             var specialInstructions = document.getElementById("special-instructions").value || "None";
             var orderDetails = `Order for ${quantity} items`;
-
+    
             // Check if payment was made online or if payment is pending on delivery
             var paymentStatus = document.getElementById("pay-now").checked ? "Paid" : "Pending on Delivery";
-
+    
             var url = "https://script.google.com/macros/s/AKfycbxQIzSW1bP8E3XIJE3llY6DiiTUEUk-4l0xLmPIiYPTxGOamf3I7WSpC1ui0CIN142I/exec" +
                 "?email=" + encodeURIComponent(email) +
                 "&name=" + encodeURIComponent(name) +
@@ -308,7 +319,7 @@
                 "&delivery_fee=" + encodeURIComponent(deliveryFee) +
                 "&special_instructions=" + encodeURIComponent(specialInstructions) +
                 "&payment_status=" + encodeURIComponent(paymentStatus);
-
+    
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
@@ -322,7 +333,7 @@
                     alert("Error sending email: " + error);
                 });
         }
-        });
-    </script>
+    });
+    </script>    
 </body>
 </html>
