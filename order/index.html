@@ -244,6 +244,7 @@
         }
 
         checkoutButton.addEventListener("click", function (event) {
+            event.preventDefault();
             validateOrderForm();
 
             if (payNowOption.checked) {
