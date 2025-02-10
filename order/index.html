@@ -370,9 +370,6 @@
                     : "This field is required.";
                 firstInvalidField.parentNode.insertBefore(errorMessage, firstInvalidField.nextSibling);
                 firstInvalidField.focus();
-
-                // **Prevent form submission**
-                event.preventDefault();
                 return false;
             }
 
