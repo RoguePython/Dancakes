@@ -323,38 +323,34 @@
                 });
         }
         function validateOrderForm(event) {
-            const form = event.target;
+            event.preventDefault(); // Prevent form submission
+            
+            const form = document.querySelector("form");
             const requiredFields = form.querySelectorAll('[required]');
             let firstInvalidField = null;
 
-            // Clear previous error styling and messages
             requiredFields.forEach(field => {
                 field.classList.remove('invalid');
                 const existingError = field.parentNode.querySelector('.error-message');
-                if (existingError) {
-                existingError.remove();
-                }
+                if (existingError) existingError.remove();
             });
 
-            // Check each required field for validity (only the first invalid field will be processed)
             for (const field of requiredFields) {
                 if (!field.value.trim()) {
-                firstInvalidField = field;
-                break;
+                    firstInvalidField = field;
+                    break;
                 }
             }
 
-            // If an invalid field is found, prevent form submission and display error message
             if (firstInvalidField) {
-                event.preventDefault();
                 firstInvalidField.classList.add('invalid');
-
                 const errorMessage = document.createElement('span');
                 errorMessage.className = 'error-message';
-                errorMessage.textContent = 'please fill out this field!';
+                errorMessage.textContent = 'Please fill out this field!';
                 firstInvalidField.parentNode.insertBefore(errorMessage, firstInvalidField.nextSibling);
-
                 firstInvalidField.focus();
+            } else {
+                form.submit(); // Only submit if everything is valid
             }
         }
         });
