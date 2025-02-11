@@ -248,14 +248,13 @@
 
                 const confirmationMessage = `
                     Please confirm your order details:
+                    
                     Name: ${name}
                     Phone: ${phone}
                     Email: ${email}
                     Address: ${address}, ${city}
                     Quantity: ${quantity}
                     Total: ${finalTotal}
-                    
-                    Are you sure this information is correct?
                 `;
 
                 if (!confirm(confirmationMessage)) {
