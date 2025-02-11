@@ -6,7 +6,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Order - Dancakes Coffee & Bakery</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js"></script>
     <style>
         :root {
             --primary-bg: #5f4630;
@@ -168,7 +167,7 @@
                     <div class="mt-4 space-y-2">
                         <label class="flex items-center space-x-2">
                             <input type="radio" name="payment_option" value="pay_now" checked class="form-radio text-primary" id="pay-now">
-                            <span>Pay Now (Online)</span>
+                            <span>Pay Online</span>
                         </label>
                 
                         <label class="flex items-center space-x-2">
@@ -219,122 +218,76 @@
                 deliveryFeeElement.textContent = "R" + deliveryFee;
                 finalTotalElement.textContent = "R" + finalTotal;
             });
-        });
-    </script>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        if (typeof YocoSDK === "undefined") {
-            console.error("❌ Yoco SDK failed to load!");
-            alert("Payment service is currently unavailable. Please refresh the page and try again.");
-            return;
-        }
-    
-        const yoco = new YocoSDK({
-            publicKey: "pklive_1092e232mW361vr15504"
-            //publicKey: "pk_test_e348b6a5mW361vr35594"
-        });
-    
-        const checkoutButton = document.getElementById("place-order-button");
-        const payNowOption = document.getElementById("pay-now");
-        const payOnDeliveryOption = document.getElementById("pay-on-delivery");
-    
-        if (!checkoutButton) {
-            console.error("❌ Payment button not found!");
-            return;
-        }
-    
-        checkoutButton.addEventListener("click", function (event) {
-            // Get the form that contains the checkout button
-            const form = checkoutButton.closest("form");
-    
-            // If the form isn't valid according to HTML5 validations, display errors and stop.
-            if (!form.checkValidity()) {
-                form.reportValidity(); // This shows the built-in validation messages.
-                return;             // Exit without proceeding to payment.
+            const checkoutButton = document.getElementById("place-order-button");
+            const payNowOption = document.getElementById("pay-now");
+            const payOnDeliveryOption = document.getElementById("pay-on-delivery");
+
+            if (!checkoutButton) {
+                console.error("❌ Payment button not found!");
+                return;
             }
-    
-            // Now that the form is valid, prevent the default form submission
-            // and continue with the custom payment processing.
-            event.preventDefault();
-    
-            if (payNowOption.checked) {
-                console.log("✅ Pay Now selected - opening Yoco checkout!");
-                try {
-                    yoco.showPopup({
-                        amountInCents: calculateFinalAmount(),
-                        currency: "ZAR",
-                        name: "Dancakes Coffee & Bakery",
-                        description: "Mini Milk Tart Order",
-                        callback: function (result) {
-                            if (result.error) {
-                                console.error("❌ Payment failed:", result.error.message);
-                                alert("Payment failed: " + result.error.message);
-                            } else {
-                                console.log("✅ Payment successful! Transaction ID:", result.id);
-                                alert("Payment successful! You will soon receive a confirmation email.");
-                                document.getElementById("payment-token").value = result.id;
-                                sendEmail();
-                            }
-                        }
-                    });
-                } catch (error) {
-                    console.error("❌ Error initializing Yoco:", error);
+
+            checkoutButton.addEventListener("click", function (event) {
+                // Get the form that contains the checkout button
+                const form = checkoutButton.closest("form");
+                // If the form isn't valid according to HTML5 validations, display errors and stop.
+                if (!form.checkValidity()) {
+                    form.reportValidity(); // This shows the built-in validation messages.
+                    return;             // Exit without proceeding to payment.
                 }
-            } else if (payOnDeliveryOption.checked) {
-                console.log("✅ Pay on Delivery selected - skipping Yoco and sending email.");
-                sendEmail();
-                alert("Your order has been placed! Please have your card ready upon delivery.");
+                event.preventDefault();
+
+                if (payNowOption.checked) {
+                    console.log("✅ Pay Online selected - showing message and redirecting to Yoco payment page!");
+                    alert("You will receive an email shortly and be directed to a Yoco payment page. Please pay the amount owed: " + finalTotalElement.textContent);
+                    sendEmail("Online payment, this will be verified by Dancakes owner");
+                    window.location.href = "https://pay.yoco.com/Dancakes";
+                } else if (payOnDeliveryOption.checked) {
+                    console.log("✅ Pay on Delivery selected - sending email.");
+                    sendEmail("Pending on Delivery");
+                    alert("Your order has been placed! Please have your card ready upon delivery. Remember to check your spam folder for the confirmation email.");
+                }
+            });
+
+            function sendEmail(paymentStatus) {
+                var email = document.getElementById("email").value;
+                var name = document.getElementById("name").value;
+                var phone = document.getElementById("phone").value;
+                var address = document.getElementById("address").value;
+                var city = document.getElementById("city").value;
+                var quantity = document.getElementById("quantity").value;
+                var totalPrice = document.getElementById("final-total").textContent;
+                var deliveryFee = document.getElementById("delivery-fee").textContent;
+                var specialInstructions = document.getElementById("special-instructions").value || "None";
+                var orderDetails = `Order for ${quantity} items`;
+
+                var url = "https://script.google.com/macros/s/AKfycbxiuImwCuoSkyukDREmKGRQ8_uvn9BtzUTlwv9RcJoLoLNp8ekhZo5TjTdZjfGNMDPDIw/exec" +
+                    "?email=" + encodeURIComponent(email) +
+                    "&name=" + encodeURIComponent(name) +
+                    "&phone=" + encodeURIComponent(phone) +
+                    "&address=" + encodeURIComponent(address) +
+                    "&city=" + encodeURIComponent(city) +
+                    "&order_details=" + encodeURIComponent(orderDetails) +
+                    "&total_price=" + encodeURIComponent(totalPrice) +
+                    "&delivery_fee=" + encodeURIComponent(deliveryFee) +
+                    "&special_instructions=" + encodeURIComponent(specialInstructions) +
+                    "&payment_status=" + encodeURIComponent(paymentStatus);
+
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert("A confirmation email has been sent. Remember to check your spam folder!");
+                        } else {
+                            alert("Error sending email: " + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        alert("Error sending email: " + error);
+                    });
             }
         });
-    
-        function calculateFinalAmount() {
-            const totalText = document.getElementById("final-total").textContent;
-            const totalAmount = parseFloat(totalText.replace("R", "").trim());
-            return Math.round(totalAmount * 100); // Convert to cents for Yoco
-        }
-    
-        function sendEmail() {
-            var email = document.getElementById("email").value;
-            var name = document.getElementById("name").value;
-            var phone = document.getElementById("phone").value;
-            var address = document.getElementById("address").value;
-            var city = document.getElementById("city").value;
-            var quantity = document.getElementById("quantity").value;
-            var totalPrice = document.getElementById("final-total").textContent;
-            var deliveryFee = document.getElementById("delivery-fee").textContent;
-            var specialInstructions = document.getElementById("special-instructions").value || "None";
-            var orderDetails = `Order for ${quantity} items`;
-    
-            // Check if payment was made online or if payment is pending on delivery
-            var paymentStatus = document.getElementById("pay-now").checked ? "Paid" : "Pending on Delivery";
-    
-            var url = "https://script.google.com/macros/s/AKfycbxiuImwCuoSkyukDREmKGRQ8_uvn9BtzUTlwv9RcJoLoLNp8ekhZo5TjTdZjfGNMDPDIw/exec" +
-                "?email=" + encodeURIComponent(email) +
-                "&name=" + encodeURIComponent(name) +
-                "&phone=" + encodeURIComponent(phone) +
-                "&address=" + encodeURIComponent(address) +
-                "&city=" + encodeURIComponent(city) +
-                "&order_details=" + encodeURIComponent(orderDetails) +
-                "&total_price=" + encodeURIComponent(totalPrice) +
-                "&delivery_fee=" + encodeURIComponent(deliveryFee) +
-                "&special_instructions=" + encodeURIComponent(specialInstructions) +
-                "&payment_status=" + encodeURIComponent(paymentStatus);
-    
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert("A confirmation email has been sent. Remember to check your spam folder!");
-                    } else {
-                        alert("Error sending email: " + data.message);
-                    }
-                })
-                .catch(error => {
-                    alert("Error sending email: " + error);
-                });
-        }
-    });
     </script>    
 </body>
 </html>
