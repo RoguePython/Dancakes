@@ -184,7 +184,6 @@
                 </section>
 
             </form>
-
         </div>
     </main>
 
@@ -238,9 +237,34 @@
                 }
                 event.preventDefault();
 
+                // Gather user information for confirmation
+                const name = document.getElementById("name").value;
+                const phone = document.getElementById("phone").value;
+                const email = document.getElementById("email").value;
+                const address = document.getElementById("address").value;
+                const city = document.getElementById("city").value;
+                const quantity = document.getElementById("quantity").value;
+                const finalTotal = finalTotalElement.textContent;
+
+                const confirmationMessage = `
+                    Please confirm your order details:
+                    Name: ${name}
+                    Phone: ${phone}
+                    Email: ${email}
+                    Address: ${address}, ${city}
+                    Quantity: ${quantity}
+                    Total: ${finalTotal}
+                    
+                    Are you sure this information is correct?
+                `;
+
+                if (!confirm(confirmationMessage)) {
+                    return; // Exit if the user cancels the confirmation
+                }
+
                 if (payNowOption.checked) {
                     console.log("✅ Pay Online selected - showing message and redirecting to Yoco payment page!");
-                    alert("You will receive an email shortly and be directed to a Yoco payment page. Please pay the amount owed: " + finalTotalElement.textContent);
+                    alert("You will receive an email shortly and be directed to a Yoco payment page. Please pay the amount owed: " + finalTotal);
                     sendEmail("Online payment, this will be verified by Dancakes owner");
                     window.location.href = "https://pay.yoco.com/Dancakes";
                 } else if (payOnDeliveryOption.checked) {
