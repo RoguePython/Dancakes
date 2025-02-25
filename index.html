@@ -12,27 +12,22 @@
         body {
             background: linear-gradient(to bottom, #e6e1db, #c8a989);
             color: #5f4630;
-            font-size: 1.2rem; /* Increase base font size */
+            font-size: 1.2rem;
         }
-
         h1 {
-            font-size: 2.5rem; /* Larger main headings */
+            font-size: 2.5rem;
         }
-
         h2 {
-            font-size: 2rem; /* Larger section headings */
+            font-size: 2rem;
         }
-
         h3 {
-            font-size: 1.7rem; /* Larger sub-section headings */
+            font-size: 1.7rem;
         }
-
         p, label, a {
-            font-size: 1.3rem; /* Increase paragraph, links, and form labels */
+            font-size: 1.3rem;
         }
-
         .primary-color {
-            color: #5f4630; /* Deep brown */
+            color: #5f4630;
         }
         .bg-primary {
             background: linear-gradient(to right, #bc8d64, #5f4630);
@@ -51,11 +46,10 @@
             text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
         }
         @keyframes growAndShrink {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.1); }
-        100% { transform: scale(1); }
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
         }
-
         .animate-grow {
             animation: growAndShrink 2s infinite ease-in-out;
         }
@@ -64,12 +58,46 @@
             transform: translateY(20px);
             animation: fadeInUp 1s ease-out forwards;
         }
-
         @keyframes fadeInUp {
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
+        }
+        /* Modal Overlay */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* semi-transparent backdrop */
+            z-index: 2000;
+        }
+        
+        /* Modal Content Box */
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 400px;
+            background: #fff;
+            border-radius: 6px;
+            padding: 30px 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+        
+        /* Close (X) Button */
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -80,7 +108,7 @@
             <div class="flex items-center space-x-3">
                 <img src="logo.png" alt="Dancakes Coffee and Bakery Logo" class="h-12">
                 <h1 class="text-3xl font-bold">Dancakes</h1>
-            </div>            
+            </div>
             <!-- Desktop Navigation (Hidden on Small Screens) -->
             <nav class="hidden md:flex space-x-6">
                 <a href="#hero" class="hover:text-gray-300">Home</a>
@@ -88,7 +116,6 @@
                 <a href="#about" class="hover:text-gray-300">About</a>
                 <a href="#contact" class="hover:text-gray-300">Contact</a>
             </nav>
-
             <!-- Mobile Dropdown Menu -->
             <div class="md:hidden relative">
                 <button id="menu-btn" class="text-lg font-bold bg-primary text-primary px-4 py-2 rounded shadow-md">
@@ -100,7 +127,7 @@
                     <a href="#about" class="block px-4 py-3 text-white hover:bg-highlight">About</a>
                     <a href="#contact" class="block px-4 py-3 text-white hover:bg-highlight">Contact</a>
                 </div>
-            </div>         
+            </div>
         </div>
     </header>
 
@@ -114,16 +141,16 @@
         </div>
     </section>
     
-        <!-- Product Preview -->
-        <section id="products" class="bg-accent py-16 px-6 text-center fade-in">
-            <hr class="border-t-2 border-gray-300 w-1/4 mx-auto my-10">
-            <h2 class="text-5xl font-semibold primary-color">Milk Tarts</h2>
-            <div class="bg-gradient-to-b from-white to-gray-100 p-8 rounded-2xl shadow-2xl max-w-md mx-auto border border-gray-200">
-                <h3 class="text-2xl font-bold text-yellow-700">Delicious <span class="text-brown-600">Cupcake-sized Milk Tarts</span></h3>
-                <p class="mt-2 text-gray-700">Perfect for sharing and celebrating National Milk Tart Day with us!</p>
-                <a href="/order/" class="mt-4 inline-block px-6 py-3 rounded-lg text-lg btn-highlight">Order Milk Tart</a>
-            </div>
-        </section>
+    <!-- Product Preview -->
+    <section id="products" class="bg-accent py-16 px-6 text-center fade-in">
+        <hr class="border-t-2 border-gray-300 w-1/4 mx-auto my-10">
+        <h2 class="text-5xl font-semibold primary-color">Milk Tarts</h2>
+        <div class="bg-gradient-to-b from-white to-gray-100 p-8 rounded-2xl shadow-2xl max-w-md mx-auto border border-gray-200">
+            <h3 class="text-2xl font-bold text-yellow-700">Delicious <span class="text-brown-600">Cupcake-sized Milk Tarts</span></h3>
+            <p class="mt-2 text-gray-700">Perfect for sharing and celebrating National Milk Tart Day with us!</p>
+            <a href="/order/" class="mt-4 inline-block px-6 py-3 rounded-lg text-lg btn-highlight">Order Milk Tart</a>
+        </div>
+    </section>
 
     <!-- About Section -->
     <section id="about" class="py-16 px-6 text-center bg-gray-100 fade-in">
@@ -152,26 +179,67 @@
         </div>
     </section>
     
+    <!-- Notification Popup Modal (Initially Hidden) -->
+    <div id="notification-popup" class="modal" style="display: none;">
+        <div class="modal-content">
+        <!-- Close (X) Button -->
+        <span class="close">&times;</span>
+        <h2>Notice</h2>
+        <p>Thank you for your interest in Dancakes Coffee & Bakery. </p>
+        <p>We are currently at full capacity and are not accepting online orders at this time. </p>
+        <p>However, you are welcome to visit our stall at the Langenhoven Mark, located at Joachim van Brug, </p>
+        <p>Langenhoven Park, Bloemfontein, 9301.</p>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="bg-primary text-white text-center py-6">
         <p>Dancakes Coffee and Bakery. Celebrating National Milk Tart Day.</p>
     </footer>
-</body>
+
+    <!-- JavaScript -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            const menuBtn = document.getElementById("menu-btn");
-            const mobileMenu = document.getElementById("mobile-menu");
+        // Mobile Menu functionality
+        const menuBtn = document.getElementById("menu-btn");
+        const mobileMenu = document.getElementById("mobile-menu");
     
-            menuBtn.addEventListener("click", function () {
-                mobileMenu.classList.toggle("hidden");
-            });
+        menuBtn.addEventListener("click", function () {
+            mobileMenu.classList.toggle("hidden");
+        });
     
-            // Close menu when clicking outside
-            document.addEventListener("click", function (event) {
-                if (!menuBtn.contains(event.target) && !mobileMenu.contains(event.target)) {
-                    mobileMenu.classList.add("hidden");
-                }
+        // Close menu when clicking outside
+        document.addEventListener("click", function (event) {
+            if (!menuBtn.contains(event.target) && !mobileMenu.contains(event.target)) {
+            mobileMenu.classList.add("hidden");
+            }
+        });
+    
+        // Notification Modal
+        const notificationModal = document.getElementById("notification-popup");
+        const closeBtn = notificationModal.querySelector(".close");
+    
+        // Intercept clicks on any "order" buttons and show the notification modal
+        const orderButtons = document.querySelectorAll('a[href="/order/"]');
+        orderButtons.forEach(function(button) {
+            button.addEventListener("click", function(event) {
+            event.preventDefault();
+            notificationModal.style.display = "block";
             });
         });
-    </script>  
+    
+        // Close the modal when the close button is clicked
+        closeBtn.addEventListener("click", function() {
+            notificationModal.style.display = "none";
+        });
+    
+        // Close modal if the user clicks outside the modal content
+        window.addEventListener("click", function(event) {
+            if (event.target === notificationModal) {
+            notificationModal.style.display = "none";
+            }
+        });
+        });
+    </script>
+</body>
 </html>
